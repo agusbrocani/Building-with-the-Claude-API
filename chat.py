@@ -14,17 +14,14 @@ def add_assistant_message(message, text):
     assistant_message = {"role": "assistant", "content": text}
     message.append(assistant_message)
 
-systemPrompt = "Sos un asistente de matematica, " \
-"que se va comportar como un profesor, por lo tanto, vas a tener que tener" \
-"paciencia y explicar todo de manera clara y detallada"
-
-def chat(messages, system=None):
+def chat(messages, system=None, temperature=1.0):
     params = {
         "model": model,
         "max_tokens": 1000,
         "messages": messages,
+        "temperature": temperature
     }
-
+    
     if system:
         params["system"] = system
 
@@ -32,6 +29,9 @@ def chat(messages, system=None):
     return response.content[0].text
 
 mensajes = []
+systemPrompt = "Sos un asistente de matematica, " \
+"que se va comportar como un profesor, por lo tanto, vas a tener que tener" \
+"paciencia y explicar todo de manera clara y detallada"
 
 while True:
     print("------------------------------")
@@ -44,6 +44,16 @@ while True:
     
     print("\nUsuario:", mensaje)
     add_user_message(mensajes, mensaje)
+
     respuesta = chat(mensajes, systemPrompt)
     print("\nAsistente:", respuesta)
+
+    # temperature = 0.0
+    # respuesta = chat(mensajes, systemPrompt, temperature)
+    # print("\nAsistente temperatura baja:", respuesta)
+
+    # temperature = 1.0
+    # respuesta = chat(mensajes, systemPrompt, temperature)
+    # print("\nAsistente temperatura alta:", respuesta)
+    
     add_assistant_message(mensajes, respuesta)
